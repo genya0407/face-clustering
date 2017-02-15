@@ -29,6 +29,7 @@ def lambda_handler(event, context):
                 }
             }
         )
+        print 'finish slicing.'
         rekog.create_collection(CollectionId=movie_id)
         jpegs = glob.glob('/tmp/*.jpg')
         for jpeg in jpegs:
