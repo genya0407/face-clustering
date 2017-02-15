@@ -12,7 +12,11 @@ def lambda_handler(event, context):
         movie_id = json.loads(event['body'])['movie_id']
     except Exception as e:
         print e
-        return
+        return {
+            'statusCode': 422,
+            'headers': {},
+            'body': 'Specify "movie_id" attribute.'
+        }
 
     res = dynamo.scan(
         Limit=3000,
@@ -60,4 +64,12 @@ def lambda_handler(event, context):
             UpdateExpression="SET #T = :t"
         )
 
-    return
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'message': 'success'
+        }),
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    }
