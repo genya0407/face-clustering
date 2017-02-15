@@ -8,7 +8,6 @@ dynamo = boto3.client('dynamodb')
 rekog = boto3.client('rekognition')
 
 def lambda_handler(event, context):
-    print 'hoge'
     try:
         movie_id = json.loads(event['body'])['movie_id']
     except Exception as e:

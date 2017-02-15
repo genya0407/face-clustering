@@ -4,8 +4,13 @@ import json
 dynamo = boto3.client('dynamodb')
 
 def lambda_handler(event, context):
-    params = json.loads(event['body'])
+    movie_id = event['movie_id']
     return dynamo.scan(
-        FilterExpression=boto3.Attr('movie_id').eq(params['movie_id']),
+        ExpressionAttributeValues={
+            ':movie_id': {
+                'S': movie_id,
+            },
+        },
+        FilterExpression='movie_id = :movie_id',
         TableName='faces'
     )
