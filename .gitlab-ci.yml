@@ -1,5 +1,5 @@
 deploy:
-    image: cgswong/aws:aws
+    image: cgswong/aws
     script:
         - ./deploy.sh
     only:
