@@ -2,6 +2,7 @@ import os
 import boto3
 import glob
 import re
+import time as t
 
 s3 = boto3.client('s3')
 rekog = boto3.client('rekognition')
@@ -13,18 +14,19 @@ def lambda_handler(event, context):
         key = record['s3']['object']['key']
         etag = record['s3']['object']['eTag']
         movie_file = '/tmp/movie.mp4'
+        movie_id = etag + str(t.time())
 
         s3.download_file(bucket, key, movie_file)
         os.system(r'./ffmpeg.linux64 -i /tmp/movie.mp4 -r 1 -f image2 /tmp/frame%d.jpg > /dev/null 2>&1')
         try:
-            rekog.create_collection(CollectionId=etag)
+            rekog.create_collection(CollectionId=movie_id)
         except Exception as e:
-            rekog.delete_collection(CollectionId=etag)
-            rekog.create_collection(CollectionId=etag)
+            rekog.delete_collection(CollectionId=movie_id)
+            rekog.create_collection(CollectionId=movie_id)
             dynamo.delete_item(
                 Key={
                     'movie_id': {
-                        'S': etag
+                        'S':  movie_id
                     }
                 },
                 TableName='faces'
@@ -34,7 +36,7 @@ def lambda_handler(event, context):
             time = re.search(r'/tmp/frame(\d+).jpg', jpeg).group(1)
             with open(jpeg, 'rb') as f:
                 face_records = rekog.index_faces(
-                    CollectionId=etag,
+                    CollectionId=movie_id,
                     Image={
                         'Bytes': f.read()
                     },
@@ -51,7 +53,7 @@ def lambda_handler(event, context):
                                 'N': time
                             },
                             'movie_id': {
-                                'S': etag
+                                'S': movie_id
                             }
                         }
                     )
