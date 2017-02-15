@@ -18,19 +18,18 @@ def lambda_handler(event, context):
 
         s3.download_file(bucket, key, movie_file)
         os.system(r'./ffmpeg.linux64 -i /tmp/movie.mp4 -r 1 -f image2 /tmp/frame%d.jpg > /dev/null 2>&1')
-        try:
-            rekog.create_collection(CollectionId=movie_id)
-        except Exception as e:
-            rekog.delete_collection(CollectionId=movie_id)
-            rekog.create_collection(CollectionId=movie_id)
-            dynamo.delete_item(
-                Key={
-                    'movie_id': {
-                        'S':  movie_id
-                    }
+        dynamo.put_item(
+            TableName='movies',
+            Item={
+                'movie_id': {
+                    'S': movie_id
                 },
-                TableName='faces'
-            )
+                'object_key': {
+                    'S': key
+                }
+            }
+        )
+        rekog.create_collection(CollectionId=movie_id)
         jpegs = glob.glob('/tmp/*.jpg')
         for jpeg in jpegs:
             time = re.search(r'/tmp/frame(\d+).jpg', jpeg).group(1)
