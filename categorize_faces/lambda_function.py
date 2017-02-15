@@ -19,7 +19,7 @@ def lambda_handler(event, context):
         }
 
     res = dynamo.scan(
-        Limit=3000,
+        Limit=10000,
         TableName="faces",
         ExpressionAttributeValues={
             ':movie_id': {
