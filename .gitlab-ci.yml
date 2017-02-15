@@ -1,6 +1,6 @@
 deploy:
     image: genya0407/docker-aws
     script:
-        - ./deploy.sh
+        - ./deploy_all.sh
     only:
         - master
