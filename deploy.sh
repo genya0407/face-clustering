@@ -1,6 +1,6 @@
 #!/bin/bash
 
-zip -r /tmp/categorize_faces.zip ./categorize_faces/*
+zip -r /tmp/categorize_faces.zip ./categorize_faces/* > /dev/null 2>&1
 aws lambda update-function-code --function-name "categorize_faces" --zip-file "fileb:///tmp/categorize_faces.zip"
-zip -r /tmp/movie-capture.zip ./movie-capture/*
+zip -r /tmp/movie-capture.zip ./movie-capture/* > /dev/null 2>&1
 aws lambda update-function-code --function-name "movie-capture" --zip-file "fileb:///tmp/movie-capture.zip"
