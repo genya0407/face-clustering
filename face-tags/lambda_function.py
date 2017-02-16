@@ -28,5 +28,5 @@ def lambda_handler(event, context):
     return {
         'statusCode': 200,
         'headers': {},
-        'body': json.dumps(time_to_faces)
+        'body': time_to_faces
     }

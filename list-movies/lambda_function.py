@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     )
 
     return {
-        'body': json.dumps(as_json(res)),
+        'body': as_json(res),
         'statusCode': 200,
         'headers': {}
     }
