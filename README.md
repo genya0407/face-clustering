@@ -1,17 +1,15 @@
-# 顔認識 API 仕様
+# 顔認識 API
 
-## 共通事項
-
-### Endpoint
+## Endpoint
 
 https://mf7k96zs89.execute-api.us-west-2.amazonaws.com/dev/
 
-### 認証
+## 認証
 
 HTTPヘッダーに、`x-api-key`という名前でAPIキーを入れる必要があります。
 三軒家に言ってもらえれば発行します。
 
-## 概要
+## 使い方
 
 動画のある時刻にはどの人物が写っているか、という情報を取得するには、以下の手順を踏みます。
 
@@ -20,6 +18,13 @@ HTTPヘッダーに、`x-api-key`という名前でAPIキーを入れる必要�
 `GET /movie`を実行し、対象の動画IDを取得します。
 
 #### 例
+
+下の例では、
+
+- a06f449e9b83a9d473348d775d40a4e31487192288.51
+- 97bc47503d1ed6d302dc9198f2a323081487240915.31
+
+などが動画IDです。
 
 リクエストの例：
 ```shell
@@ -54,11 +59,14 @@ prompt %> curl --header "x-api-key: ${API_KEY}" "https://mf7k96zs89.execute-api.
 }
 ```
 
-### 2. 所望の動画の人物tagを取得する
+### 2. 動画IDから人物tagを取得する
 
 `GET /movie/{movie_id}/tags`を実行し、人物tagの情報を取得します。
 
 #### 例
+
+下の例では、`body`プロパティに入っているdictionaryのキーが動画開始時からの秒数を表し、dictionaryのvalueのリストに含まれる数字が人物tag（人物を見分ける識別子）を表しています。
+同じ人物tagが格納された秒数には、同じ人物が写り込んでいます。
 
 リクエストの例：
 ```shell
