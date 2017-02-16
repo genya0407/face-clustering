@@ -3,6 +3,7 @@ import boto3
 import glob
 import re
 import time as t
+import datetime
 
 s3 = boto3.client('s3')
 rekog = boto3.client('rekognition')
@@ -18,17 +19,6 @@ def lambda_handler(event, context):
 
         s3.download_file(bucket, key, movie_file)
         os.system(r'./ffmpeg.linux64 -i /tmp/movie.mp4 -r 1 -f image2 /tmp/frame%d.jpg > /dev/null 2>&1')
-        dynamo.put_item(
-            TableName='movies',
-            Item={
-                'movie_id': {
-                    'S': movie_id
-                },
-                'object_key': {
-                    'S': key
-                }
-            }
-        )
         print 'finish slicing.'
         rekog.create_collection(CollectionId=movie_id)
         jpegs = glob.glob('/tmp/*.jpg')
@@ -57,3 +47,17 @@ def lambda_handler(event, context):
                             }
                         }
                     )
+        dynamo.put_item(
+            TableName='movies',
+            Item={
+                'movie_id': {
+                    'S': movie_id
+                },
+                'object_key': {
+                    'S': key
+                },
+                'capture_finish_at': {
+                    'S': str(datetime.datetime.now())
+                }
+            }
+        )
