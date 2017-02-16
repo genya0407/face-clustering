@@ -125,7 +125,7 @@ curl --header "x-api-key: ${API_KEY}" "https://mf7k96zs89.execute-api.us-west-2.
 }
 ```
 
-`body`プロパティがレスポンスの内容です。リストに含まれるdictionaryがそれぞれ一つの動画を表しています。
+`body`プロパティがレスポンスの内容です。リストに含まれるHashがそれぞれ一つの動画を表しています。
 
 - `object_key`は、動画のファイル名を表します
 - `movie_id`は、動画のIDです
@@ -190,6 +190,6 @@ curl --header "x-api-key: ${API_KEY}" "https://mf7k96zs89.execute-api.us-west-2.
 
 `body`プロパティがレスポンスの内容です。
 
-- このdictionaryのkeyは動画開始からの時刻（秒）を表し、dictionaryのvalueはその時刻に動画に写っている人物のIDを表します。
+- このHashのkeyは動画開始からの時刻（秒）を表し、Hashのvalueはその時刻に動画に写っている人物のIDを表します。
     - 上記のレスポンスの例は、時刻00:01の時点では８番の人物だけが写っており、時刻00:05の時点では１番と２番の人物だけが写っている、という意味です。
-- その秒数のときに動画に誰も写っていないときは、dictionaryのvalueは空リストになります。
+- その秒数のときに動画に誰も写っていないときは、Hashのvalueは空リストになります。
