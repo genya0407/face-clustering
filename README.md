@@ -1,4 +1,5 @@
 # 顔認識 API
+<hr />
 
 ## Endpoint
 
@@ -8,6 +9,8 @@ https://mf7k96zs89.execute-api.us-west-2.amazonaws.com/dev/
 
 HTTPヘッダーに、`x-api-key`という名前でAPIキーを入れる必要があります。
 三軒家に言ってもらえれば発行します。
+
+<hr />
 
 ## 使い方
 ### 1. 動画IDを取得する
@@ -89,6 +92,9 @@ curl --header "x-api-key: ${API_KEY}" "https://mf7k96zs89.execute-api.us-west-2.
   "statusCode": 200
 }
 ```
+
+
+<hr />
 
 ## 各APIのドキュメント
 
