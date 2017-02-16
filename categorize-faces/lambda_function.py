@@ -3,19 +3,20 @@ import community
 import collections
 import networkx as nx
 import json
+import datetime
 
 dynamo = boto3.client('dynamodb')
 rekog = boto3.client('rekognition')
 
 def lambda_handler(event, context):
     try:
-        movie_id = json.loads(event['body'])['movie_id']
+        movie_id = event['movie_id']
     except Exception as e:
         print e
         return {
             'statusCode': 422,
             'headers': {},
-            'body': 'Specify "movie_id" attribute.'
+            'body': 'Specify "movie_id" attribute |' + str(event)
         }
 
     res = dynamo.scan(
@@ -44,7 +45,7 @@ def lambda_handler(event, context):
             G.add_edge(pair['Face']['FaceId'], item['face_id']['S'])
     
     partition = community.best_partition(G)
-    
+
     for face_id, tag in partition.items():
         dynamo.update_item(
             Key={
@@ -63,6 +64,24 @@ def lambda_handler(event, context):
             TableName='faces',
             UpdateExpression="SET #T = :t"
         )
+
+    dynamo.update_item(
+        ExpressionAttributeNames={
+            '#TIMESTAMP': 'categorize_finish_at'
+        },
+	ExpressionAttributeValues={
+	    ':t': {
+		'S': str(datetime.datetime.now()),
+	    },
+	},
+	Key={
+            'movie_id': {
+                'S': movie_id
+            }
+	},
+	TableName='movies',
+	UpdateExpression='SET #TIMESTAMP = :t'
+    )
 
     return {
         'statusCode': 200,
