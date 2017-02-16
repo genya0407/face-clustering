@@ -127,16 +127,9 @@ curl --header "x-api-key: ${API_KEY}" "https://mf7k96zs89.execute-api.us-west-2.
 
 `body`プロパティがレスポンスの内容です。リストに含まれるHashがそれぞれ一つの動画を表しています。
 
-- `object_key`は、動画のファイル名を表します
-- `movie_id`は、動画のIDです
-    - 同じ動画をアップロードしても、アップロードする度に異なるIDが割り振られます
-- `capture_finish_at`が`null`の動画は、「アップロードは終了したが、顔認識を行っていない」という状態にあります
-    - 動画をアップロードしなおす必要があります
-    - 動画をアップロードし直した場合、`capture_finish_at`が`null`でない新しい動画オブジェクトが作られます
-        - `capture_finish_at`が`null`でなくなるわけではない
-- `categorize_finish_at`が`null`の動画は、「顔の分類を行っていない」という状態にあります
-    - 後述の`POST /movie/{movie_id}/tags`を実行して、顔の分類を行う必要があります
-        - `POST /movie/{movie_id}/tags`を実行した場合、`categorize_finish_at`が`null`からタイムスタンプに変わります。
+- `capture_finish_at`と`categorize_finish_at`の両方が`null`でない動画についてのみ、顔認識情報を取得できます。
+    - `capture_finish_at`が`null`の動画については、動画をアップロードしなおす必要があります。
+    - `categorize_finish_at`が`null`の動画は、後述の`POST /movie/{movie_id}/tags`を実行して、顔の分類を行う必要があります
 
 ### POST /movie/{movie\_id}/tags
 
